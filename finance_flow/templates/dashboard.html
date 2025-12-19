@@ -1,0 +1,1484 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="dashboard-page">
+    <!-- Background Effects -->
+    <div class="bg-effects">
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+        <div class="gradient-orb orb-3"></div>
+        <div class="mesh-gradient"></div>
+    </div>
+    
+    <!-- Top Navigation -->
+    <nav class="top-nav">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <div class="brand-logo">
+                    <div class="logo-icon">
+                        <i class="ri-line-chart-line"></i>
+                    </div>
+                    <div class="brand-text">
+                        <span class="brand-name gradient-text">Finance Flow</span>
+                        <span class="brand-version">AI-Powered</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="nav-actions">
+                <a href="/logout" class="user-btn">
+                    <div class="user-avatar">
+                        <i class="ri-user-line"></i>
+                    </div>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Setup Section -->
+        <div id="setup-section" class="setup-section">
+            <div class="setup-container">
+                <!-- Hero Section -->
+                <div class="setup-hero">
+                    <div class="hero-content">
+                        <div class="hero-badge">
+                            <i class="ri-sparkles-line"></i>
+                            <span>AI-Powered Analysis</span>
+                        </div>
+                        <h1 class="hero-title">
+                            <span class="gradient-text">Unlock</span> Your Financial Intelligence
+                        </h1>
+                        <p class="hero-subtitle">Comprehensive financial analysis with intelligent categorization</p>
+                    </div>
+                </div>
+                
+                <!-- Configuration Form -->
+                <div class="config-form-container">
+                    <div class="config-card glass-card">
+                        <h2 style="text-align: center; margin-bottom: 2rem; color: white;">Configure Analysis</h2>
+                        
+                        <form id="analysis-form">
+                            <!-- Date Inputs -->
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+                                <div>
+                                    <label style="display: block; margin-bottom: 0.5rem; color: white; font-weight: 600;">From Date</label>
+                                    <input type="date" id="from-date" name="from_date" required class="form-input">
+                                </div>
+                                <div>
+                                    <label style="display: block; margin-bottom: 0.5rem; color: white; font-weight: 600;">To Date</label>
+                                    <input type="date" id="to-date" name="to_date" required class="form-input">
+                                </div>
+                            </div>
+                            
+                            <!-- Quick Select -->
+                            <div class="quick-select" style="margin-bottom: 1.5rem;">
+                                <span class="quick-label">Quick Select:</span>
+                                <div class="quick-buttons">
+                                    <button type="button" class="quick-btn" onclick="setDateRange(30)">Last 30 days</button>
+                                    <button type="button" class="quick-btn" onclick="setDateRange(90)">Last 3 months</button>
+                                    <button type="button" class="quick-btn" onclick="setDateRange(180)">Last 6 months</button>
+                                    <button type="button" class="quick-btn active" onclick="setDateRange(365)">Last year</button>
+                                </div>
+                            </div>
+                            
+                            <!-- Password Input -->
+                            <div style="margin-bottom: 2rem;">
+                                <label style="display: block; margin-bottom: 0.5rem; color: white; font-weight: 600;">
+                                    PDF Password <span style="color: #ef4444;">*</span>
+                                </label>
+                                <div style="position: relative;">
+                                    <input type="password" id="pdf-password" name="pdf_password" required 
+                                           placeholder="Last 5 digits + DDMMYY" class="form-input">
+                                    <button type="button" class="password-toggle" onclick="togglePassword('pdf-password')">
+                                        <i class="ri-eye-line"></i>
+                                    </button>
+                                </div>
+                                <div class="input-help">
+                                    <i class="ri-information-line"></i>
+                                    <span><strong>Format:</strong> 67890150390 (mobile digits + date of birth)</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Submit Button -->
+                            <button type="submit" class="mega-btn" id="start-analysis-btn">
+                                <div class="btn-bg"></div>
+                                <div class="btn-content">
+                                    <div class="btn-icon">
+                                        <i class="ri-magic-line"></i>
+                                    </div>
+                                    <div class="btn-text">
+                                        <span class="btn-title">Start Financial Analysis</span>
+                                        <span class="btn-subtitle">Powered by Advanced AI</span>
+                                    </div>
+                                </div>
+                                <div class="btn-glow"></div>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Dashboard Content -->
+        <div id="dashboard-content" class="dashboard-content hidden">
+            <!-- Dashboard Header -->
+            <div class="dashboard-header">
+                <div class="header-content">
+                    <h1 class="dashboard-title">
+                        <i class="ri-dashboard-3-line"></i>
+                        Financial Intelligence Dashboard
+                    </h1>
+                    <p class="dashboard-subtitle">AI-powered insights from your banking data</p>
+                </div>
+                
+                <div class="header-actions">
+                    <div class="date-range-display" id="date-range-display">
+                        <i class="ri-calendar-line"></i>
+                        <span id="analysis-date-range">Loading...</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Summary Cards -->
+            <div class="summary-section">
+                <div class="summary-grid" id="summary-cards">
+                    <!-- Cards populated by JavaScript -->
+                </div>
+            </div>
+            
+            <!-- AI Insights Section -->
+            <div class="insights-section" style="margin: 2rem 0;">
+                <div class="section-header">
+                    <div class="section-title">
+                        <i class="ri-brain-line"></i>
+                        <h2>AI Financial Insights</h2>
+                        <div class="insight-count" id="insight-count">0 insights</div>
+                    </div>
+                    <div class="section-actions">
+                        <button class="filter-btn active" onclick="filterInsights('all')">All</button>
+                        <button class="filter-btn" onclick="filterInsights('savings')">Savings</button>
+                        <button class="filter-btn" onclick="filterInsights('spending')">Spending</button>
+                        <button class="filter-btn" onclick="filterInsights('trends')">Trends</button>
+                    </div>
+                </div>
+                <div class="insights-grid" id="insights-container">
+                    <!-- Insights populated by JavaScript -->
+                </div>
+            </div>
+            
+            <!-- Charts Section -->
+            <div class="charts-section">
+                <div class="section-header">
+                    <div class="section-title">
+                        <i class="ri-bar-chart-line"></i>
+                        <h2>Financial Analytics</h2>
+                    </div>
+                </div>
+                
+                <div class="charts-grid">
+                    <!-- Row 1 -->
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3><i class="ri-line-chart-line"></i> Monthly Trends</h3>
+                        </div>
+                        <div class="chart-container">
+                            <div id="spending-trend-chart" class="chart-content">
+                                <div class="chart-loading">
+                                    <i class="ri-line-chart-line"></i>
+                                    <span>Loading trends...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3><i class="ri-pie-chart-line"></i> Category Breakdown</h3>
+                        </div>
+                        <div class="chart-container">
+                            <div id="category-chart" class="chart-content">
+                                <div class="chart-loading">
+                                    <i class="ri-pie-chart-line"></i>
+                                    <span>Loading categories...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Row 2 -->
+                    <div class="chart-card chart-full">
+                        <div class="chart-header">
+                            <h3><i class="ri-bar-chart-line"></i> Income vs Expenses Analysis</h3>
+                        </div>
+                        <div class="chart-container">
+                            <div id="income-expense-chart" class="chart-content">
+                                <div class="chart-loading">
+                                    <i class="ri-bar-chart-line"></i>
+                                    <span>Loading analysis...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Transactions Table -->
+            <div class="transactions-section">
+                <div class="section-header">
+                    <div class="section-title">
+                        <i class="ri-list-check-line"></i>
+                        <h2>Transaction History</h2>
+                        <div class="transaction-count" id="transaction-count">0 transactions</div>
+                    </div>
+                    <div class="section-actions">
+                        <div class="search-filters">
+                            <input type="text" id="transaction-search" placeholder="Search transactions..." class="filter-input">
+                            <select id="category-filter" class="filter-select">
+                                <option value="">All Categories</option>
+                            </select>
+                            <select id="type-filter" class="filter-select">
+                                <option value="">All Types</option>
+                                <option value="Credit">Income</option>
+                                <option value="Debit">Expenses</option>
+                            </select>
+                        </div>
+                        <div class="table-actions">
+                            <button onclick="exportTransactions('csv')" class="action-btn">
+                                <i class="ri-download-line"></i> Export CSV
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="table-container">
+                    <table class="transactions-table" id="transactions-table">
+                        <thead>
+                            <tr>
+                                <th onclick="sortTable('Date')" class="sortable">Date</th>
+                                <th onclick="sortTable('Description')" class="sortable">Description</th>
+                                <th onclick="sortTable('Category')" class="sortable">Category</th>
+                                <th onclick="sortTable('Type')" class="sortable">Type</th>
+                                <th onclick="sortTable('Amount')" class="sortable">Amount</th>
+                                <th onclick="sortTable('Balance')" class="sortable">Balance</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transactions-tbody">
+                            <!-- Transactions populated by JavaScript -->
+                        </tbody>
+                    </table>
+                    
+                    <div class="table-pagination" id="table-pagination">
+                        <div class="pagination-info">
+                            <span id="pagination-info">Showing transactions</span>
+                            <select id="rows-per-page" onchange="changeRowsPerPage()">
+                                <option value="25">25 per page</option>
+                                <option value="50">50 per page</option>
+                                <option value="100">100 per page</option>
+                            </select>
+                        </div>
+                        <div class="pagination-controls">
+                            <button onclick="previousPage()" class="pagination-btn" id="prev-btn">
+                                <i class="ri-arrow-left-line"></i> Previous
+                            </button>
+                            <div class="page-numbers" id="page-numbers"></div>
+                            <button onclick="nextPage()" class="pagination-btn" id="next-btn">
+                                Next <i class="ri-arrow-right-line"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Smart Recommendations Section -->
+            <div class="recommendations-section">
+                <div class="section-header">
+                    <div class="section-title">
+                        <i class="ri-lightbulb-line"></i>
+                        <h2>Smart Money Management Tips</h2>
+                        <div class="potential-savings" id="potential-savings">AI-powered recommendations</div>
+                    </div>
+                </div>
+                
+                <div class="recommendations-grid" id="recommendations-container">
+                    <!-- Recommendations populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- Loading Overlay -->
+<div id="loading-overlay" class="loading-overlay hidden">
+    <div class="loading-container">
+        <div class="loading-animation">
+            <div class="loading-spinner">
+                <div class="spinner-ring"></div>
+                <div class="spinner-ring"></div>
+                <div class="spinner-ring"></div>
+            </div>
+            <div class="loading-logo">
+                <i class="ri-line-chart-line"></i>
+            </div>
+        </div>
+        <div class="loading-content">
+            <h2 class="loading-title">Processing Your Financial Data</h2>
+            <p id="loading-message" class="loading-message">Initializing advanced analysis...</p>
+            <div class="progress-container">
+                <div class="progress-track">
+                    <div id="progress-bar" class="progress-bar" style="width: 0%;"></div>
+                </div>
+                <div id="progress-text" class="progress-text">0%</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script>
+// Global variables
+let currentTransactionData = null;
+let currentPage = 1;
+let rowsPerPage = 25;
+let filteredTransactions = [];
+
+// Initialize
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Professional dashboard initializing...');
+    setupFormHandlers();
+    setDateRangeDefault();
+});
+
+function setupFormHandlers() {
+    const form = document.getElementById('analysis-form');
+    if (form) {
+        form.addEventListener('submit', handleFormSubmit);
+    }
+}
+
+function setDateRangeDefault() {
+    const today = new Date();
+    const oneYearAgo = new Date(today.getFullYear() - 1, today.getMonth(), today.getDate());
+    
+    document.getElementById('from-date').value = oneYearAgo.toISOString().split('T')[0];
+    document.getElementById('to-date').value = today.toISOString().split('T')[0];
+}
+
+function setDateRange(days) {
+    const today = new Date();
+    const pastDate = new Date(today.getTime() - (days * 24 * 60 * 60 * 1000));
+    
+    document.getElementById('from-date').value = pastDate.toISOString().split('T')[0];
+    document.getElementById('to-date').value = today.toISOString().split('T')[0];
+    
+    document.querySelectorAll('.quick-btn').forEach(btn => btn.classList.remove('active'));
+    if (event && event.target) {
+        event.target.classList.add('active');
+    }
+}
+
+function togglePassword(inputId) {
+    const input = document.getElementById(inputId);
+    const icon = document.querySelector('#' + inputId + ' + .password-toggle i');
+    
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.className = 'ri-eye-off-line';
+    } else {
+        input.type = 'password';
+        icon.className = 'ri-eye-line';
+    }
+}
+
+function showToast(message, type) {
+    const toast = document.createElement('div');
+    const bgColor = type === 'success' ? '#22c55e' : type === 'error' ? '#ef4444' : '#0ea5e9';
+    toast.style.cssText = `position: fixed; top: 20px; right: 20px; background: rgba(0,0,0,0.9); color: white; padding: 1rem 2rem; border-radius: 8px; z-index: 9999; font-size: 14px; max-width: 400px; border-left: 4px solid ${bgColor}; box-shadow: 0 10px 40px rgba(0,0,0,0.3);`;
+    toast.innerHTML = `<div style="display: flex; align-items: center; gap: 0.5rem;">${message}</div>`;
+    
+    document.body.appendChild(toast);
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(400px)';
+        setTimeout(() => toast.remove(), 300);
+    }, 5000);
+}
+
+async function handleFormSubmit(event) {
+    event.preventDefault();
+    
+    const fromDate = document.getElementById('from-date').value;
+    const toDate = document.getElementById('to-date').value;
+    const pdfPassword = document.getElementById('pdf-password').value;
+    
+    if (!fromDate || !toDate || !pdfPassword) {
+        showToast('Please fill in all required fields', 'error');
+        return;
+    }
+    
+    const btn = document.getElementById('start-analysis-btn');
+    btn.innerHTML = '<div class="btn-bg"></div><div class="btn-content">Processing financial analysis...</div>';
+    btn.disabled = true;
+    
+    showToast('Starting intelligent financial analysis...', 'info');
+    showLoadingOverlay();
+    
+    try {
+        const response = await fetch('/api/process-statements', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                from_date: fromDate,
+                to_date: toDate,
+                pdf_password: pdfPassword
+            })
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            showToast('Analysis started successfully!', 'success');
+            startProgressPolling(result.task_id);
+        } else {
+            throw new Error(result.message || 'Failed to start processing');
+        }
+        
+    } catch (error) {
+        console.error('Error:', error);
+        showToast('Error: ' + error.message, 'error');
+        hideLoadingOverlay();
+        resetButton();
+    }
+}
+
+function resetButton() {
+    const btn = document.getElementById('start-analysis-btn');
+    btn.innerHTML = '<div class="btn-bg"></div><div class="btn-content"><div class="btn-icon"><i class="ri-magic-line"></i></div><div class="btn-text"><span class="btn-title">Start Financial Analysis</span><span class="btn-subtitle">Powered by Advanced AI</span></div></div><div class="btn-glow"></div>';
+    btn.disabled = false;
+}
+
+function showLoadingOverlay() {
+    document.getElementById('loading-overlay').classList.remove('hidden');
+}
+
+function hideLoadingOverlay() {
+    document.getElementById('loading-overlay').classList.add('hidden');
+}
+
+function startProgressPolling(taskId) {
+    const interval = setInterval(async () => {
+        try {
+            const response = await fetch('/api/processing-status/' + taskId);
+            const status = await response.json();
+            
+            const progress = status.progress || 0;
+            
+            document.getElementById('progress-bar').style.width = progress + '%';
+            document.getElementById('progress-text').textContent = Math.floor(progress) + '%';
+            document.getElementById('loading-message').textContent = status.message || 'Processing...';
+            
+            if (status.status === 'completed') {
+                clearInterval(interval);
+                setTimeout(() => {
+                    loadAndDisplayResults(taskId);
+                }, 1000);
+            } else if (status.status === 'error') {
+                clearInterval(interval);
+                hideLoadingOverlay();
+                showToast('Analysis failed: ' + status.message, 'error');
+                resetButton();
+            }
+            
+        } catch (error) {
+            console.error('Polling error:', error);
+        }
+    }, 2000);
+}
+
+async function loadAndDisplayResults(taskId) {
+    try {
+        const response = await fetch('/api/transactions/' + taskId);
+        const data = await response.json();
+        
+        if (data.error) {
+            throw new Error(data.error);
+        }
+        
+        currentTransactionData = data;
+        filteredTransactions = [...data.transactions];
+        
+        console.log('📊 Professional data loaded:', data);
+        
+        // Update dashboard
+        updateDashboardSummary(data.summary);
+        updateAIInsights(data.insights, data.summary);
+        updateSmartRecommendations(data.summary, data.transactions);
+        updateTransactionTable(filteredTransactions);
+        setupTableFilters(data.transactions);
+        loadProfessionalCharts(data.transactions);
+        
+        // Show dashboard
+        document.getElementById('setup-section').style.display = 'none';
+        document.getElementById('dashboard-content').classList.remove('hidden');
+        
+        hideLoadingOverlay();
+        showToast(`🎉 Analysis completed! ${data.transactions.length} transactions categorized with AI insights`, 'success');
+        
+    } catch (error) {
+        console.error('Error loading results:', error);
+        hideLoadingOverlay();
+        showToast('Error loading results: ' + error.message, 'error');
+        resetButton();
+    }
+}
+
+function updateDashboardSummary(summary) {
+    document.getElementById('analysis-date-range').textContent = 
+        `${summary.date_range.start} to ${summary.date_range.end}`;
+    
+    const container = document.getElementById('summary-cards');
+    container.innerHTML = `
+        <div class="summary-card transactions">
+            <div class="card-header">
+                <div class="card-icon"><i class="ri-list-check-line"></i></div>
+                <div class="card-title">Total Transactions</div>
+            </div>
+            <div class="card-value">${summary.total_transactions.toLocaleString()}</div>
+            <div class="card-subtitle">Intelligently categorized</div>
+        </div>
+        
+        <div class="summary-card income">
+            <div class="card-header">
+                <div class="card-icon"><i class="ri-arrow-up-line"></i></div>
+                <div class="card-title">Total Income</div>
+            </div>
+            <div class="card-value income">₹${summary.total_income.toLocaleString('en-IN')}</div>
+            <div class="card-subtitle">₹${summary.avg_monthly_income.toLocaleString('en-IN')} per month</div>
+        </div>
+        
+        <div class="summary-card expenses">
+            <div class="card-header">
+                <div class="card-icon"><i class="ri-arrow-down-line"></i></div>
+                <div class="card-title">Total Expenses</div>
+            </div>
+            <div class="card-value expense">₹${summary.total_expenses.toLocaleString('en-IN')}</div>
+            <div class="card-subtitle">₹${summary.avg_monthly_expenses.toLocaleString('en-IN')} per month</div>
+        </div>
+        
+        <div class="summary-card savings ${summary.net_savings >= 0 ? 'positive' : 'negative'}">
+            <div class="card-header">
+                <div class="card-icon"><i class="ri-${summary.net_savings >= 0 ? 'trending-up' : 'trending-down'}-line"></i></div>
+                <div class="card-title">Net Savings</div>
+            </div>
+            <div class="card-value savings">₹${summary.net_savings.toLocaleString('en-IN')}</div>
+            <div class="card-subtitle">${summary.savings_rate.toFixed(1)}% savings rate</div>
+        </div>
+    `;
+}
+
+function updateAIInsights(insights, summary) {
+    const container = document.getElementById('insights-container');
+    document.getElementById('insight-count').textContent = `${insights.length} insights`;
+    
+    if (!insights || insights.length === 0) {
+        container.innerHTML = '<div class="no-insights">Generating AI insights...</div>';
+        return;
+    }
+    
+    container.innerHTML = insights.map(insight => `
+        <div class="insight-card ${insight.severity}" data-type="${insight.type}">
+            <div class="insight-header">
+                <h4>${insight.title}</h4>
+                <span class="insight-value">${insight.value}</span>
+            </div>
+            <p class="insight-message">${insight.message}</p>
+        </div>
+    `).join('');
+}
+
+function updateSmartRecommendations(summary, transactions) {
+    const container = document.getElementById('recommendations-container');
+    
+    // Generate smart recommendations based on data
+    const recommendations = generateSmartRecommendations(summary, transactions);
+    
+    container.innerHTML = recommendations.map(rec => `
+        <div class="recommendation-card ${rec.priority}">
+            <div class="rec-header">
+                <div class="rec-icon ${rec.icon}">
+                    <i class="ri-${rec.icon}-line"></i>
+                </div>
+                <h4>${rec.title}</h4>
+                <span class="rec-impact">${rec.impact}</span>
+            </div>
+            <p class="rec-message">${rec.message}</p>
+            <div class="rec-actions">
+                <button class="rec-btn primary">${rec.action}</button>
+                <button class="rec-btn secondary">Learn More</button>
+            </div>
+        </div>
+    `).join('');
+}
+
+function generateSmartRecommendations(summary, transactions) {
+    const recommendations = [];
+    
+    // Savings rate recommendation
+    if (summary.savings_rate < 20) {
+        recommendations.push({
+            title: 'Optimize Your Savings Rate',
+            message: `Your current savings rate is ${summary.savings_rate.toFixed(1)}%. Consider implementing the 50/30/20 rule to boost your financial health.`,
+            impact: 'High Impact',
+            priority: 'high',
+            icon: 'piggy-bank',
+            action: 'Create Budget Plan'
+        });
+    }
+    
+    // Top category optimization
+    const categoryData = {};
+    transactions.filter(t => t.Type === 'Debit').forEach(t => {
+        categoryData[t.Category] = (categoryData[t.Category] || 0) + t.Amount;
+    });
+    
+    const topCategory = Object.keys(categoryData).reduce((a, b) => categoryData[a] > categoryData[b] ? a : b, '');
+    const topCategoryPercentage = (categoryData[topCategory] / summary.total_expenses * 100);
+    
+    if (topCategoryPercentage > 30) {
+        recommendations.push({
+            title: `Optimize ${topCategory} Spending`,
+            message: `${topCategory} accounts for ${topCategoryPercentage.toFixed(1)}% of your expenses. Consider setting monthly limits for better control.`,
+            impact: 'Medium Impact',
+            priority: 'medium',
+            icon: 'target',
+            action: 'Set Category Budget'
+        });
+    }
+    
+    // Emergency fund recommendation
+    const monthlyExpenses = summary.avg_monthly_expenses;
+    const emergencyFundTarget = monthlyExpenses * 6;
+    
+    recommendations.push({
+        title: 'Build Emergency Fund',
+        message: `Aim for ₹${emergencyFundTarget.toLocaleString('en-IN')} (6 months of expenses) in your emergency fund for financial security.`,
+        impact: 'High Impact',
+        priority: 'high',
+        icon: 'shield-check',
+        action: 'Start Emergency Fund'
+    });
+    
+    return recommendations;
+}
+
+function filterInsights(type) {
+    // Update active filter button
+    document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
+    
+    // Filter insights
+    const insights = document.querySelectorAll('.insight-card');
+    insights.forEach(insight => {
+        if (type === 'all' || insight.dataset.type === type) {
+            insight.style.display = 'block';
+        } else {
+            insight.style.display = 'none';
+        }
+    });
+}
+
+function setupTableFilters(transactions) {
+    // Setup category filter
+    const categories = [...new Set(transactions.map(t => t.Category))].sort();
+    const categoryFilter = document.getElementById('category-filter');
+    categoryFilter.innerHTML = '<option value="">All Categories</option>' + 
+        categories.map(cat => `<option value="${cat}">${cat}</option>`).join('');
+    
+    // Add event listeners
+    document.getElementById('transaction-search').addEventListener('input', applyFilters);
+    document.getElementById('category-filter').addEventListener('change', applyFilters);
+    document.getElementById('type-filter').addEventListener('change', applyFilters);
+}
+
+function applyFilters() {
+    const searchTerm = document.getElementById('transaction-search').value.toLowerCase();
+    const categoryFilter = document.getElementById('category-filter').value;
+    const typeFilter = document.getElementById('type-filter').value;
+    
+    filteredTransactions = currentTransactionData.transactions.filter(transaction => {
+        const matchesSearch = transaction.Description.toLowerCase().includes(searchTerm);
+        const matchesCategory = !categoryFilter || transaction.Category === categoryFilter;
+        const matchesType = !typeFilter || transaction.Type === typeFilter;
+        
+        return matchesSearch && matchesCategory && matchesType;
+    });
+    
+    currentPage = 1;
+    updateTransactionTable(filteredTransactions);
+}
+
+function updateTransactionTable(transactions) {
+    document.getElementById('transaction-count').textContent = `${transactions.length} transactions`;
+    
+    const startIndex = (currentPage - 1) * rowsPerPage;
+    const endIndex = startIndex + rowsPerPage;
+    const pageTransactions = transactions.slice(startIndex, endIndex);
+    
+    const tbody = document.getElementById('transactions-tbody');
+    tbody.innerHTML = pageTransactions.map(transaction => `
+        <tr class="transaction-row">
+            <td class="date-cell">${formatDate(transaction.Date)}</td>
+            <td class="description-cell">${transaction.Description}</td>
+            <td class="category-cell">
+                <span class="category-badge ${getCategoryClass(transaction.Category)}">${transaction.Category}</span>
+            </td>
+            <td class="type-cell">
+                <span class="type-badge ${transaction.Type.toLowerCase()}">${transaction.Type}</span>
+            </td>
+            <td class="amount-cell ${transaction.Type.toLowerCase()}">₹${transaction.Amount.toLocaleString('en-IN')}</td>
+            <td class="balance-cell">₹${transaction.Balance.toLocaleString('en-IN')}</td>
+        </tr>
+    `).join('');
+    
+    updatePagination(transactions.length);
+}
+
+function updatePagination(totalTransactions) {
+    const totalPages = Math.ceil(totalTransactions / rowsPerPage);
+    const startIndex = (currentPage - 1) * rowsPerPage + 1;
+    const endIndex = Math.min(currentPage * rowsPerPage, totalTransactions);
+    
+    document.getElementById('pagination-info').textContent = 
+        `Showing ${startIndex}-${endIndex} of ${totalTransactions} transactions`;
+    
+    // Update pagination controls
+    document.getElementById('prev-btn').disabled = currentPage === 1;
+    document.getElementById('next-btn').disabled = currentPage === totalPages;
+    
+    // Generate page numbers
+    const pageNumbers = document.getElementById('page-numbers');
+    let pageHTML = '';
+    
+    const startPage = Math.max(1, currentPage - 2);
+    const endPage = Math.min(totalPages, currentPage + 2);
+    
+    for (let i = startPage; i <= endPage; i++) {
+        pageHTML += `<button onclick="goToPage(${i})" class="page-btn ${i === currentPage ? 'active' : ''}">${i}</button>`;
+    }
+    
+    pageNumbers.innerHTML = pageHTML;
+}
+
+function previousPage() {
+    if (currentPage > 1) {
+        currentPage--;
+        updateTransactionTable(filteredTransactions);
+    }
+}
+
+function nextPage() {
+    const totalPages = Math.ceil(filteredTransactions.length / rowsPerPage);
+    if (currentPage < totalPages) {
+        currentPage++;
+        updateTransactionTable(filteredTransactions);
+    }
+}
+
+function goToPage(page) {
+    currentPage = page;
+    updateTransactionTable(filteredTransactions);
+}
+
+function changeRowsPerPage() {
+    rowsPerPage = parseInt(document.getElementById('rows-per-page').value);
+    currentPage = 1;
+    updateTransactionTable(filteredTransactions);
+}
+
+function exportTransactions(format) {
+    if (!filteredTransactions || filteredTransactions.length === 0) {
+        showToast('No transactions to export', 'warning');
+        return;
+    }
+    
+    if (format === 'csv') {
+        const csvContent = convertToCSV(filteredTransactions);
+        downloadFile(csvContent, 'transactions.csv', 'text/csv');
+        showToast('Transactions exported to CSV', 'success');
+    }
+}
+
+function convertToCSV(transactions) {
+    const headers = ['Date', 'Description', 'Category', 'Type', 'Amount', 'Balance'];
+    const csvRows = [headers.join(',')];
+    
+    transactions.forEach(transaction => {
+        const row = [
+            transaction.Date,
+            `"${transaction.Description}"`,
+            transaction.Category,
+            transaction.Type,
+            transaction.Amount,
+            transaction.Balance
+        ];
+        csvRows.push(row.join(','));
+    });
+    
+    return csvRows.join('\n');
+}
+
+function downloadFile(content, filename, contentType) {
+    const blob = new Blob([content], { type: contentType });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+}
+
+function getCategoryClass(category) {
+    const categoryClasses = {
+        'Food & Dining': 'food',
+        'Shopping': 'shopping', 
+        'Transport': 'transport',
+        'Utilities': 'utilities',
+        'Healthcare': 'healthcare',
+        'Entertainment': 'entertainment',
+        'Banking': 'banking',
+        'Investment': 'investment',
+        'Education': 'education',
+        'Income': 'income',
+        'Transfer': 'transfer',
+        'Cash Withdrawal': 'cash',
+        'Other': 'other'
+    };
+    return categoryClasses[category] || 'other';
+}
+
+function formatDate(dateStr) {
+    if (!dateStr) return 'N/A';
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('en-IN', {
+        day: '2-digit',
+        month: 'short', 
+        year: 'numeric'
+    });
+}
+
+function loadProfessionalCharts(transactions) {
+    console.log('📊 Loading professional charts...');
+    
+    try {
+        loadSpendingTrendChart(transactions);
+        loadCategoryChart(transactions);  
+        loadIncomeExpenseChart(transactions);
+        showToast('📊 Professional charts loaded successfully', 'success');
+    } catch (error) {
+        console.error('Chart loading error:', error);
+        showToast('⚠️ Some charts failed to load', 'error');
+    }
+}
+
+function loadSpendingTrendChart(transactions) {
+    if (!transactions || transactions.length === 0) return;
+    
+    try {
+        const monthlyData = {};
+        
+        transactions.forEach(transaction => {
+            const month = transaction.Date.substring(0, 7);
+            if (!monthlyData[month]) {
+                monthlyData[month] = { income: 0, expenses: 0 };
+            }
+            
+            if (transaction.Type === 'Credit') {
+                monthlyData[month].income += transaction.Amount;
+            } else {
+                monthlyData[month].expenses += transaction.Amount;
+            }
+        });
+        
+        const months = Object.keys(monthlyData).sort();
+        const incomeData = months.map(month => monthlyData[month].income);
+        const expenseData = months.map(month => monthlyData[month].expenses);
+        
+        const traces = [
+            {
+                x: months,
+                y: incomeData,
+                type: 'scatter',
+                mode: 'lines+markers',
+                name: '💰 Income',
+                line: { color: '#22c55e', width: 3, shape: 'spline' },
+                marker: { size: 6, color: '#22c55e' }
+            },
+            {
+                x: months,
+                y: expenseData,
+                type: 'scatter',
+                mode: 'lines+markers', 
+                name: '💸 Expenses',
+                line: { color: '#ef4444', width: 3, shape: 'spline' },
+                marker: { size: 6, color: '#ef4444' }
+            }
+        ];
+        
+        const layout = {
+            title: { text: '💹 Monthly Financial Trends', font: { size: 16, color: '#ffffff' } },
+            xaxis: { title: 'Month', gridcolor: 'rgba(255,255,255,0.1)', color: '#ffffff' },
+            yaxis: { title: 'Amount (₹)', gridcolor: 'rgba(255,255,255,0.1)', color: '#ffffff' },
+            paper_bgcolor: 'rgba(0,0,0,0)',
+            plot_bgcolor: 'rgba(0,0,0,0)',
+            font: { color: '#ffffff', family: 'Inter' },
+            showlegend: true,
+            legend: { orientation: 'h', yanchor: 'bottom', y: 1.02, xanchor: 'right', x: 1, font: { color: '#ffffff' } },
+            margin: { l: 60, r: 30, t: 60, b: 50 },
+            hovermode: 'x unified'
+        };
+        
+        Plotly.newPlot('spending-trend-chart', traces, layout, { responsive: true, displayModeBar: false });
+        
+    } catch (error) {
+        console.error('Error loading spending trend chart:', error);
+    }
+}
+
+function loadCategoryChart(transactions) {
+    if (!transactions || transactions.length === 0) return;
+    
+    try {
+        const expenseTransactions = transactions.filter(t => t.Type === 'Debit');
+        const categoryData = {};
+        
+        expenseTransactions.forEach(transaction => {
+            const category = transaction.Category;
+            categoryData[category] = (categoryData[category] || 0) + transaction.Amount;
+        });
+        
+        const categories = Object.keys(categoryData);
+        const amounts = Object.values(categoryData);
+        
+        if (categories.length === 0) return;
+        
+        const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#feca57', '#ff9ff3', '#54a0ff', '#ff6348', '#48cae4', '#90e0ef'];
+        
+        const trace = {
+            labels: categories,
+            values: amounts,
+            type: 'pie',
+            hole: 0.4,
+            textinfo: 'percent+label',
+            textposition: 'outside',
+            marker: { colors: colors, line: { color: 'rgba(255,255,255,0.8)', width: 2 } },
+            textfont: { size: 10, color: '#ffffff' },
+            hovertemplate: '<b>%{label}</b><br>%{percent}<br>₹%{value:,.0f}<extra></extra>'
+        };
+        
+        const totalAmount = amounts.reduce((a,b) => a+b, 0);
+        
+        const layout = {
+            title: { text: '🎯 Expense Category Distribution', font: { size: 16, color: '#ffffff' } },
+            paper_bgcolor: 'rgba(0,0,0,0)',
+            font: { color: '#ffffff', family: 'Inter' },
+            showlegend: false,
+            annotations: [{
+                text: `💳<br><b>Total<br>Expenses</b><br>₹${totalAmount.toLocaleString('en-IN')}`,
+                x: 0.5, y: 0.5,
+                font: { size: 12, color: '#ffffff' },
+                showarrow: false
+            }],
+            margin: { l: 20, r: 20, t: 50, b: 20 }
+        };
+        
+        Plotly.newPlot('category-chart', [trace], layout, { responsive: true, displayModeBar: false });
+        
+    } catch (error) {
+        console.error('Error loading category chart:', error);
+    }
+}
+
+function loadIncomeExpenseChart(transactions) {
+    if (!transactions || transactions.length === 0) return;
+    
+    try {
+        const monthlyData = {};
+        
+        transactions.forEach(transaction => {
+            const month = transaction.Date.substring(0, 7);
+            if (!monthlyData[month]) {
+                monthlyData[month] = { income: 0, expenses: 0 };
+            }
+            
+            if (transaction.Type === 'Credit') {
+                monthlyData[month].income += transaction.Amount;
+            } else {
+                monthlyData[month].expenses += transaction.Amount;
+            }
+        });
+        
+        const months = Object.keys(monthlyData).sort();
+        const incomeData = months.map(month => monthlyData[month].income);
+        const expenseData = months.map(month => monthlyData[month].expenses);
+        
+        const traces = [
+            {
+                x: months,
+                y: incomeData,
+                type: 'bar',
+                name: '💰 Income',
+                marker: { color: '#22c55e', line: { color: 'rgba(255,255,255,0.6)', width: 1 } },
+                hovertemplate: '<b>%{x}</b><br>💰 Income: ₹%{y:,.0f}<extra></extra>'
+            },
+            {
+                x: months,
+                y: expenseData,
+                type: 'bar',
+                name: '💸 Expenses',
+                marker: { color: '#ef4444', line: { color: 'rgba(255,255,255,0.6)', width: 1 } },
+                hovertemplate: '<b>%{x}</b><br>💸 Expenses: ₹%{y:,.0f}<extra></extra>'
+            }
+        ];
+        
+        const layout = {
+            title: { text: '📊 Monthly Income vs Expenses', font: { size: 16, color: '#ffffff' } },
+            xaxis: { title: 'Month', gridcolor: 'rgba(255,255,255,0.1)', color: '#ffffff' },
+            yaxis: { title: 'Amount (₹)', gridcolor: 'rgba(255,255,255,0.1)', color: '#ffffff', tickformat: '₹,.0f' },
+            barmode: 'group',
+            paper_bgcolor: 'rgba(0,0,0,0)',
+            plot_bgcolor: 'rgba(0,0,0,0)',
+            font: { color: '#ffffff', family: 'Inter' },
+            showlegend: true,
+            legend: { orientation: 'h', yanchor: 'bottom', y: 1.02, xanchor: 'right', x: 1, font: { color: '#ffffff' } },
+            margin: { l: 60, r: 30, t: 60, b: 50 },
+            hovermode: 'x unified'
+        };
+        
+        Plotly.newPlot('income-expense-chart', traces, layout, { responsive: true, displayModeBar: false });
+        
+    } catch (error) {
+        console.error('Error loading income expense chart:', error);
+    }
+}
+
+console.log('🚀 Professional Finance Flow Dashboard loaded successfully!');
+</script>
+
+<style>
+/* Professional Chart Layout */
+.charts-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    margin: 2rem 0;
+}
+
+.chart-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 1.5rem;
+    backdrop-filter: blur(10px);
+}
+
+.chart-card.chart-full {
+    grid-column: span 2;
+}
+
+.chart-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.chart-header h3 {
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.chart-container {
+    position: relative;
+}
+
+.chart-content {
+    min-height: 400px;
+    width: 100%;
+}
+
+.chart-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 400px;
+    color: rgba(255, 255, 255, 0.6);
+    gap: 1rem;
+}
+
+.chart-loading i {
+    font-size: 3rem;
+}
+
+/* Professional Insights */
+.insights-section {
+    margin: 2rem 0;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.section-title h2 {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.insight-count {
+    background: rgba(14, 165, 233, 0.2);
+    color: #0ea5e9;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.section-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.filter-btn {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.8);
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.filter-btn:hover, .filter-btn.active {
+    background: rgba(14, 165, 233, 0.3);
+    color: #0ea5e9;
+}
+
+.insights-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.insight-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 1.5rem;
+    backdrop-filter: blur(10px);
+}
+
+.insight-card.success { border-left: 4px solid #22c55e; }
+.insight-card.warning { border-left: 4px solid #f59e0b; }
+.insight-card.error { border-left: 4px solid #ef4444; }
+.insight-card.info { border-left: 4px solid #0ea5e9; }
+
+.insight-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.insight-header h4 {
+    color: white;
+    font-size: 1rem;
+    margin: 0;
+}
+
+.insight-value {
+    color: #0ea5e9;
+    font-weight: 600;
+}
+
+.insight-message {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* Professional Recommendations */
+.recommendations-section {
+    margin: 2rem 0;
+}
+
+.recommendations-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 1.5rem;
+}
+
+.recommendation-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 1.5rem;
+    backdrop-filter: blur(10px);
+}
+
+.recommendation-card.high { border-left: 4px solid #ef4444; }
+.recommendation-card.medium { border-left: 4px solid #f59e0b; }
+.recommendation-card.low { border-left: 4px solid #22c55e; }
+
+.rec-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.rec-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+.rec-icon.piggy-bank { background: rgba(34, 197, 94, 0.2); color: #22c55e; }
+.rec-icon.target { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+.rec-icon.shield-check { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+
+.rec-header h4 {
+    color: white;
+    font-size: 1rem;
+    margin: 0;
+    flex: 1;
+}
+
+.rec-impact {
+    background: rgba(14, 165, 233, 0.2);
+    color: #0ea5e9;
+    padding: 0.25rem 0.5rem;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    font-weight: 500;
+}
+
+.rec-message {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+    margin: 0 0 1rem 0;
+    line-height: 1.5;
+}
+
+.rec-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.rec-btn {
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.rec-btn.primary {
+    background: rgba(14, 165, 233, 0.8);
+    color: white;
+    border: none;
+}
+
+.rec-btn.secondary {
+    background: transparent;
+    color: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.rec-btn:hover {
+    transform: translateY(-1px);
+}
+
+/* Category badges */
+.category-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.category-badge.food { background: rgba(255, 107, 107, 0.2); color: #ff6b6b; }
+.category-badge.shopping { background: rgba(78, 205, 196, 0.2); color: #4ecdc4; }
+.category-badge.transport { background: rgba(69, 183, 209, 0.2); color: #45b7d1; }
+.category-badge.utilities { background: rgba(150, 206, 180, 0.2); color: #96ceb4; }
+.category-badge.healthcare { background: rgba(254, 202, 87, 0.2); color: #feca57; }
+.category-badge.entertainment { background: rgba(255, 159, 243, 0.2); color: #ff9ff3; }
+.category-badge.banking { background: rgba(84, 160, 255, 0.2); color: #54a0ff; }
+.category-badge.investment { background: rgba(255, 99, 72, 0.2); color: #ff6348; }
+.category-badge.education { background: rgba(72, 202, 228, 0.2); color: #48cae4; }
+.category-badge.income { background: rgba(34, 197, 94, 0.2); color: #22c55e; }
+.category-badge.transfer { background: rgba(144, 224, 239, 0.2); color: #90e0ef; }
+.category-badge.cash { background: rgba(156, 163, 175, 0.2); color: #9ca3af; }
+.category-badge.other { background: rgba(107, 114, 128, 0.2); color: #6b7280; }
+
+/* Professional Table Filters */
+.search-filters {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.filter-input, .filter-select {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+}
+
+.filter-input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.table-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.action-btn {
+    background: rgba(14, 165, 233, 0.2);
+    color: #0ea5e9;
+    border: 1px solid rgba(14, 165, 233, 0.3);
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.action-btn:hover {
+    background: rgba(14, 165, 233, 0.3);
+}
+
+/* Pagination */
+.table-pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    margin-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.pagination-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+}
+
+.pagination-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.pagination-btn {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.8);
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.pagination-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.pagination-btn:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.page-btn {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.8);
+    border: none;
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: all 0.3s ease;
+}
+
+.page-btn.active, .page-btn:hover {
+    background: rgba(14, 165, 233, 0.3);
+    color: #0ea5e9;
+}
+
+@media (max-width: 768px) {
+    .charts-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .chart-card.chart-full {
+        grid-column: span 1;
+    }
+    
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    .search-filters {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .filter-input, .filter-select {
+        width: 100%;
+    }
+}
+</style>
+{% endblock %}

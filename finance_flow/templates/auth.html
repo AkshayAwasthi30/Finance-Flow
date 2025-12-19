@@ -1,0 +1,262 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="auth-page">
+    <!-- Animated Background Grid -->
+    <div class="grid-background">
+        <div class="grid-lines"></div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="auth-container">
+        <div class="auth-content">
+            <!-- Hero Section -->
+            <div class="hero-section">
+                <div class="logo-container">
+                    <div class="logo-animation">
+                        <div class="logo-circle">
+                            <i class="ri-line-chart-line"></i>
+                        </div>
+                        <div class="logo-pulse"></div>
+                    </div>
+                    <div class="brand-text">
+                        <h1 class="brand-name">
+                            <span class="gradient-text">Finance</span>
+                            <span class="accent-text">Flow</span>
+                        </h1>
+                        <p class="brand-tagline">AI-Powered Financial Intelligence Platform</p>
+                    </div>
+                </div>
+                
+                <div class="hero-stats">
+                    <div class="stat-item" data-count="250000">
+                        <div class="stat-number">0</div>
+                        <div class="stat-label">Transactions Analyzed</div>
+                    </div>
+                    <div class="stat-item" data-count="15000">
+                        <div class="stat-number">0</div>
+                        <div class="stat-label">Users Trust Us</div>
+                    </div>
+                    <div class="stat-item" data-count="98">
+                        <div class="stat-number">0</div>
+                        <div class="stat-label">% Accuracy Rate</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Auth Card -->
+            <div class="auth-card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="ri-mail-line"></i>
+                    </div>
+                    <h2>Connect Your Gmail</h2>
+                    <p>Securely connect to analyze your SBI bank statements with advanced AI</p>
+                </div>
+                
+                <!-- Security Badge -->
+                <div class="security-badge">
+                    <div class="badge-content">
+                        <i class="ri-shield-check-line"></i>
+                        <div class="badge-text">
+                            <strong>Bank-Level Security</strong>
+                            <span>256-bit encryption • Zero data retention</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Auth Form -->
+                <form id="auth-form" class="auth-form">
+                    <div class="form-group">
+                        <label for="email" class="form-label">
+                            <i class="ri-mail-line"></i>
+                            Gmail Address
+                        </label>
+                        <div class="input-container">
+                            <input 
+                                type="email" 
+                                id="email" 
+                                name="email" 
+                                required 
+                                placeholder="your.email@gmail.com"
+                                class="form-input"
+                            >
+                            <div class="input-focus-border"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password" class="form-label">
+                            <i class="ri-key-line"></i>
+                            App Password
+                            <span class="label-help" data-tooltip="Required if 2FA is enabled">?</span>
+                        </label>
+                        <div class="input-container">
+                            <input 
+                                type="password" 
+                                id="password" 
+                                name="password" 
+                                required 
+                                placeholder="Enter your Gmail app password"
+                                class="form-input"
+                            >
+                            <button type="button" class="password-toggle" onclick="togglePassword('password')">
+                                <i class="ri-eye-line"></i>
+                            </button>
+                            <div class="input-focus-border"></div>
+                        </div>
+                        <div class="form-help">
+                            <div class="help-item">
+                                <i class="ri-information-line"></i>
+                                <a href="https://myaccount.google.com/apppasswords" target="_blank" class="help-link">
+                                    Generate app password in Google Account settings
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">
+                        <span class="btn-content">
+                            <i class="ri-rocket-line"></i>
+                            <span class="btn-text">Start AI Analysis</span>
+                        </span>
+                        <div class="btn-loader hidden">
+                            <div class="loader-spinner"></div>
+                            <span>Connecting...</span>
+                        </div>
+                        <div class="btn-glow"></div>
+                    </button>
+                </form>
+                
+                <!-- Features Grid -->
+                <div class="features-preview">
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="ri-brain-line"></i>
+                        </div>
+                        <div class="feature-text">
+                            <h4>AI Insights</h4>
+                            <p>Smart spending analysis</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="ri-pie-chart-line"></i>
+                        </div>
+                        <div class="feature-text">
+                            <h4>Visual Analytics</h4>
+                            <p>Interactive charts & graphs</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="ri-smartphone-line"></i>
+                        </div>
+                        <div class="feature-text">
+                            <h4>Mobile Ready</h4>
+                            <p>Access anywhere, anytime</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Floating Elements -->
+        <div class="floating-elements">
+            <div class="float-card card-1">
+                <div class="mini-chart">
+                    <canvas id="mini-chart-1"></canvas>
+                </div>
+                <div class="card-text">
+                    <span class="amount">₹2,34,567</span>
+                    <span class="label">Monthly Income</span>
+                </div>
+            </div>
+            
+            <div class="float-card card-2">
+                <div class="progress-ring">
+                    <svg viewBox="0 0 36 36" class="circular-chart">
+                        <circle cx="18" cy="18" r="15.9" fill="transparent" stroke="#2a2d3a" stroke-width="1.5"/>
+                        <circle cx="18" cy="18" r="15.9" fill="transparent" stroke="#00d4ff" stroke-width="1.5" 
+                                stroke-dasharray="75, 100" stroke-dashoffset="25"/>
+                    </svg>
+                    <div class="percentage">75%</div>
+                </div>
+                <span class="label">Savings Rate</span>
+            </div>
+            
+            <div class="float-card card-3">
+                <div class="trend-indicator">
+                    <div class="trend-line">
+                        <div class="trend-point point-1"></div>
+                        <div class="trend-point point-2"></div>
+                        <div class="trend-point point-3"></div>
+                    </div>
+                </div>
+                <div class="card-text">
+                    <span class="change">+12.5%</span>
+                    <span class="label">This Month</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function togglePassword(inputId) {
+    const input = document.getElementById(inputId);
+    const icon = document.querySelector(`#${inputId} + .password-toggle i`);
+    
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.className = 'ri-eye-off-line';
+    } else {
+        input.type = 'password';
+        icon.className = 'ri-eye-line';
+    }
+}
+
+// Initialize floating cards animation
+document.addEventListener('DOMContentLoaded', function() {
+    // Animate stat numbers
+    const statItems = document.querySelectorAll('.stat-item');
+    statItems.forEach(item => {
+        const target = parseInt(item.dataset.count);
+        const numberElement = item.querySelector('.stat-number');
+        let current = 0;
+        const increment = target / 100;
+        
+        const timer = setInterval(() => {
+            current += increment;
+            if (current >= target) {
+                current = target;
+                clearInterval(timer);
+            }
+            numberElement.textContent = Math.floor(current).toLocaleString();
+        }, 20);
+    });
+    
+    // Create mini chart
+    const canvas = document.getElementById('mini-chart-1');
+    if (canvas) {
+        const ctx = canvas.getContext('2d');
+        canvas.width = 60;
+        canvas.height = 30;
+        
+        ctx.strokeStyle = '#00d4ff';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        
+        const points = [5, 15, 10, 20, 12, 25, 18, 8];
+        for (let i = 0; i < points.length; i++) {
+            const x = (i / (points.length - 1)) * canvas.width;
+            const y = points[i];
+            
+            if (i === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+    }
+});
+</script>
+{% endblock %}
